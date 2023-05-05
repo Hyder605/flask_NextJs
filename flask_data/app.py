@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request,jsonify
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -11,32 +11,36 @@ import os
 app = Flask(__name__)
 
 @app.route('/')
-# def home():
-#     return render_template('index.html')
-
-# @app.route('/analyze', methods=['POST'])
-@app.route('/analyze')
+def home():
+    return render_template('index.html')
+Analyzed_Data = []
+@app.route('/analyze', methods=['POST'])
 def analyze():
-    return {'members':{"mem1": "John", "mem2": "Jane", "mem3": "Mike"}}
-    # file = request.files['data_file']
-    # df = pd.read_csv(file)
+    file = request.files['data_file']
+    df = pd.read_csv(file)
 
-    # # perform data analysis
-    # num_rows, num_cols = df.shape
-    # missing_values = df.isna().sum()
-    # column_data_types = df.dtypes
-    # summary_stats = df.describe()
+    # perform data analysis
+    num_rows, num_cols = df.shape
+    summary_stats = df.describe()
+    summary_stats_json = summary_stats.to_json(orient='index')
+
+
+
+    
 
     # # Get the value of the environment variable
     # my_variable = os.environ.get('MY_VARIABLE')
+    data ={'num_rows': num_rows, 'num_cols': num_cols,"summary_stats_json":summary_stats_json}
+    Analyzed_Data.append(data)
 
-    # return render_template('analysis.html', 
-    #                    num_rows=num_rows, 
-    #                    num_cols=num_cols, 
-    #                    missing_values=missing_values, 
-    #                    column_data_types=column_data_types, 
-    #                    summary_stats=summary_stats,
-    #                    my_variable=my_variable)
+
+
+    return jsonify({'message': 'File added successfully'})
+
+
+@app.route('/users', methods=['GET'])
+def get_users():
+    return jsonify({'Analyzed Data': Analyzed_Data})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0")

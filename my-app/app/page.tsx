@@ -1,25 +1,25 @@
 'use client'
-import { useEffect, useState } from "react"
+import { useState, useEffect } from 'react'
+
+type ApiResponse = {
+  message: string
+}
 
 export default function Home() {
-  const [data, setData]=useState({})
-  useEffect(()=>{
-    fetch('/analyze').then(
-      res=>res.json()
-    ).then(
-      data=>{
-        setData(data)
-        console.log(data)
-      }
-    )
-  },[])
+  const [data, setData] = useState<ApiResponse | null>(null)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch('https://brown-tailor-cralo.ineuron.app:5000')
+      const json = await response.json()
+      setData(json)
+    }
+    fetchData()
+  }, [])
 
   return (
-
-    <div>
-      hello
-    </div>
+    <div>{data?.message}</div>
   )
-    
-  
 }
+
+
