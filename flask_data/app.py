@@ -21,8 +21,8 @@ def analyze():
 
     # perform data analysis
     num_rows, num_cols = df.shape
-    summary_stats = df.describe()
-    summary_stats_json = summary_stats.to_json(orient='index')
+    # summary_stats = df.describe()
+    # summary_stats_json = summary_stats.to_json(orient='index')
 
 
 
@@ -30,7 +30,7 @@ def analyze():
 
     # # Get the value of the environment variable
     # my_variable = os.environ.get('MY_VARIABLE')
-    data ={'num_rows': num_rows, 'num_cols': num_cols,"summary_stats_json":summary_stats_json}
+    data ={'num_rows': num_rows,'num_cols':num_cols}
     Analyzed_Data.append(data)
 
 
@@ -40,7 +40,7 @@ def analyze():
 
 @app.route('/users', methods=['GET'])
 def get_users():
-    return jsonify({'Analyzed Data': Analyzed_Data})
+    return jsonify({'Analyzed_Data': Analyzed_Data})
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0")
